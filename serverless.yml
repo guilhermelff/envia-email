@@ -1,0 +1,30 @@
+
+service: envia-email
+
+app: envia-email
+org: guilhermelff
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: sa-east-1
+  stage: dev
+  environment:
+    MAIL_USER: ${file(env.yml):${self:provider.stage}.MAIL_USER}
+    MAIL_PASS: ${file(env.yml):${self:provider.stage}.MAIL_PASS}
+
+functions:
+
+  sendEmail:
+    handler:
+      emailHandler.sendEmail
+
+    memorySize: 256
+
+    events:
+      - http:
+            path: email
+            method: post
